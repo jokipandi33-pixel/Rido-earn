@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RIDO EARN - Kuis Islami</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#f1f5f2;
+ color:#183b2c;
+}
+header{
+ background:#075b40;
+ color:white;
+ padding:25px 18px;
+ text-align:center;
+}
+header h1{margin:0;font-size:30px}
+header p{margin-bottom:0}
+.container{
+ max-width:600px;
+ margin:20px auto;
+ padding:15px;
+}
+.card{
+ background:white;
+ padding:22px;
+ border-radius:16px;
+ margin-bottom:18px;
+ box-shadow:0 3px 12px #00000010;
+}
+h2{margin-top:0}
+.score{
+ display:flex;
+ justify-content:space-between;
+ background:#e2f3e9;
+ padding:15px;
+ border-radius:12px;
+ font-weight:bold;
+}
+.question{
+ font-size:19px;
+ font-weight:bold;
+ line-height:1.5;
+}
+.option{
+ display:block;
+ width:100%;
+ padding:14px;
+ margin:10px 0;
+ border:1px solid #cbd8ce;
+ background:white;
+ border-radius:10px;
+ text-align:left;
+ font-size:16px;
+ cursor:pointer;
+}
+.option:hover{background:#e4f5e9}
+button:disabled{cursor:default;opacity:.8}
+.correct{background:#d4f5dc;border-color:green}
+.wrong{background:#ffe0e0;border-color:red}
+.mainbtn{
+ background:#08794e;
+ color:white;
+ border:0;
+ border-radius:10px;
+ padding:14px 20px;
+ font-size:16px;
+ cursor:pointer;
+ width:100%;
+}
+#feedback{font-weight:bold;line-height:1.5}
+.ad{
+ border:2px dashed #a6b8aa;
+ padding:22px;
+ text-align:center;
+ color:#718077;
+ border-radius:12px;
+}
+footer{
+ text-align:center;
+ padding:25px;
+ color:#718077;
+ font-size:13px;
+}
+</style>
+</head>
+<body>
+
+<header>
+ <h1>🌙 RIDO EARN</h1>
+ <p>Belajar Islam, Bermain Kuis, Tambah Pengetahuan</p>
+</header>
+
+<div class="container">
+
+ <div class="card">
+  <h2>Assalamu'alaikum!</h2>
+  <p>Selamat datang di Kuis Islami RIDO EARN.</p>
+  <p>Jawab pertanyaan dan kumpulkan poin belajar.</p>
+ </div>
+
+ <div class="card score">
+  <span>⭐ Skor: <span id="score">0</span></span>
+  <span>Soal: <span id="number">1/10</span></span>
+ </div>
+
+ <div class="card">
+  <p id="question" class="question"></p>
+  <div id="options"></div>
+  <p id="feedback"></p>
+  <button class="mainbtn" id="next" onclick="nextQuestion()" disabled>
+   Soal Berikutnya
+  </button>
+ </div>
+
+ <div class="card">
+  <h3>📢 Ruang Iklan</h3>
+  <div class="ad">
+   Tempat iklan RIDO EARN<br>
+   <small>Iklan belum diaktifkan</small>
+  </div>
+ </div>
+
+ <div class="card">
+  <h3>🎯 Misi RIDO EARN</h3>
+  <p>Menambah pengetahuan agama Islam melalui permainan edukatif.</p>
+ </div>
+
+</div>
+
+<footer>
+ © 2026 RIDO EARN<br>
+ Belajar • Berilmu • Bermanfaat
+</footer>
+
+<script>
+const questions=[
+ {
+ q:"Siapakah nabi terakhir?",
+ a:["Nabi Musa","Nabi Muhammad","Nabi Isa","Nabi Ibrahim"],
+ c:1,
+ e:"Nabi Muhammad ﷺ adalah nabi dan rasul terakhir."
+ },
+ {
+ q:"Berapa jumlah rukun Islam?",
+ a:["4","5","6","7"],
+ c:1,
+ e:"Rukun Islam berjumlah lima."
+ },
+ {
+ q:"Kitab suci umat Islam adalah?",
+ a:["Taurat","Injil","Al-Qur'an","Zabur"],
+ c:2,
+ e:"Al-Qur'an adalah kitab suci umat Islam."
+ },
+ {
+ q:"Berapa jumlah rakaat salat Subuh?",
+ a:["2","3","4","5"],
+ c:0,
+ e:"Salat Subuh terdiri dari dua rakaat."
+ },
+ {
+ q:"Apa nama bulan diwajibkannya puasa?",
+ a:["Syawal","Ramadan","Rajab","Muharram"],
+ c:1,
+ e:"Puasa wajib dilaksanakan pada bulan Ramadan."
+ },
+ {
+ q:"Ke arah manakah umat Islam menghadap saat salat?",
+ a:["Masjid Nabawi","Ka'bah","Masjid Al-Aqsa","Gunung Uhud"],
+ c:1,
+ e:"Umat Islam menghadap Ka'bah di Masjidil Haram."
+ },
+ {
+ q:"Siapakah malaikat yang menyampaikan wahyu?",
+ a:["Mikail","Israfil","Jibril","Izrail"],
+ c:2,
+ e:"Malaikat Jibril bertugas menyampaikan wahyu."
+ },
+ {
+ q:"Surah pertama dalam Al-Qur'an adalah?",
+ a:["Al-Baqarah","Al-Fatihah","An-Nas","Al-Ikhlas"],
+ c:1,
+ e:"Surah pertama dalam susunan mushaf adalah Al-Fatihah."
+ },
+ {
+ q:"Berapa jumlah rukun iman?",
+ a:["5","6","7","8"],
+ c:1,
+ e:"Rukun iman berjumlah enam."
+ },
+ {
+ q:"Salat wajib dalam sehari semalam berjumlah?",
+ a:["3 waktu","4 waktu","5 waktu","6 waktu"],
+ c:2,
+ e:"Salat wajib terdiri dari lima waktu."
+ }
+];
+
+let current=0;
+let score=0;
+let answered=false;
+
+function showQuestion(){
+ answered=false;
+ const item=questions[current];
+ document.getElementById("question").textContent=
+ (current+1)+". "+item.q;
+ document.getElementById("number").textContent=
+ (current+1)+"/"+questions.length;
+ document.getElementById("feedback").textContent="";
+ document.getElementById("next").disabled=true;
+ const area=document.getElementById("options");
+ area.innerHTML="";
+ item.a.forEach((answer,index)=>{
+  const btn=document.createElement("button");
+  btn.className="option";
+  btn.textContent=answer;
+  btn.onclick=()=>checkAnswer(index,btn);
+  area.appendChild(btn);
+ });
+}
+
+function checkAnswer(index,btn){
+ if(answered)return;
+ answered=true;
+ const item=questions[current];
+ const buttons=document.querySelectorAll(".option");
+ buttons.forEach((b,i)=>{
+  b.disabled=true;
+  if(i===item.c)b.classList.add("correct");
+ });
+ if(index===item.c){
+  score+=10;
+  document.getElementById("feedback").textContent=
+  "✅ Benar! "+item.e;
+ }else{
+  btn.classList.add("wrong");
+  document.getElementById("feedback").textContent=
+  "❌ Belum tepat. "+item.e;
+ }
+ document.getElementById("score").textContent=score;
+ document.getElementById("next").disabled=false;
+ document.getElementById("next").textContent=
+ current===questions.length-1?"Lihat Hasil":"Soal Berikutnya";
+}
+
+function nextQuestion(){
+ if(!answered)return;
+ current++;
+ if(current<questions.length){
+  showQuestion();
+ }else{
+  document.querySelector(".card:nth-of-type(3)").innerHTML=`
+   <h2>🎉 Kuis Selesai!</h2>
+   <h1>Skor kamu: ${score}/100</h1>
+   <p>Terima kasih sudah belajar bersama RIDO EARN.</p>
+   <button class="mainbtn" onclick="restart()">Ulangi Kuis</button>
+  `;
+ }
+}
+
+function restart(){
+ current=0;
+ score=0;
+ document.getElementById("score").textContent=0;
+ const cards=document.querySelectorAll(".card");
+ const quiz=cards[2];
+ quiz.innerHTML=`
+  <p id="question" class="question"></p>
+  <div id="options"></div>
+  <p id="feedback"></p>
+  <button class="mainbtn" id="next" onclick="nextQuestion()" disabled>Soal Berikutnya</button>
+ `;
+ showQuestion();
+}
+
+showQuestion();
+</script>
+</body>
+</html>
